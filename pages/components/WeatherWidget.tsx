@@ -21,7 +21,7 @@ export function PublicWeatherWidget() {
 
     
     return <>
-        <div style={{fontSize:'1.2rem',marginLeft:'30px', marginTop:'20px'}}>Weather is {weather}</div> 
+        <div style={{fontSize:'1.2rem',marginLeft:'30px'}}>Weather is {weather}</div> 
 		<img src="./img/102.jpg" alt="weather" style={{width:'300px', marginLeft:'530px', marginTop:'40px', marginBottom:'20px'}} />
     </>
    

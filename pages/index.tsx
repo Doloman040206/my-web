@@ -4,6 +4,7 @@ import { PublicPizaList } from './components/PublicPizaList';
 import { PublicWeatherWidget } from './components/WeatherWidget';
 
 
+
 const App = () => {
 
 	return <>

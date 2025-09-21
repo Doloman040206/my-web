@@ -264,3 +264,168 @@ nav .nav-link {
         margin: 45px 0 0;
     }
 }
+
+/* ---------- ДОДАНІ ПРОСТІ АДАПТАЦІЇ (mobile-first overrides) ---------- */
+
+/* Основні корекції для дуже маленьких екранів */
+@media (max-width: 520px) {
+  /* контейнер — не виходити за межі екрану */
+  .container { padding-left: 12px; padding-right: 12px; max-width: 100%; }
+  /* карусель і секція меню — зробити висоту адаптивною */
+  #f-img { height: auto; width: 100%; padding: 10px 0; }
+
+  /* список карток — прибираємо float і показуємо по одній в ряд */
+  .img-1 { display: block; padding: 0 8px; }
+  .img-1 li { float: none; width: 100%; margin-bottom: 14px; display: block; }
+
+  /* картинка продукту — підлаштувати радіус і ширину */
+  .food-image { width: 100%; }
+  .food-image img { border-radius: 16px; }
+
+  /* логотип і шрифти трохи менше */
+  .logo { font-size: 22px; line-height: 1.1; margin: 12px 0; }
+
+  /* зменшити великі відступи секцій */
+  .about-us { margin-top: 30px; padding: 28px 0; }
+  .portfolio { padding: 28px 0 10px; }
+  .contact { padding: 28px 0 40px; }
+
+  /* social icons spacing */
+  .soc a { margin: 0 10px; }
+
+  /* копірайт — менший відступ */
+  .copiright { margin: 20px 0 30px; font-size: 13px; }
+}
+
+/* Планшетні корекції — дві колонки для карток */
+@media (min-width: 521px) and (max-width: 991.98px) {
+  .container { padding-left: 16px; padding-right: 16px; }
+  #f-img { height: auto; padding: 14px 0; }
+
+  /* перетворюємо .img-1 на grid з двома колонками */
+  .img-1 { display: grid; grid-template-columns: repeat(2, 1fr); grid-gap: 14px; padding: 0; }
+  .img-1 li { float: none; width: auto; }
+
+  /* трохи зменшити текст меню для кращої читабельності */
+  nav .nav-link { font-size: 20px; }
+
+  /* логотип трохи менший */
+  .logo { font-size: 34px; line-height: 1.1; }
+}
+
+/* Десктоп — зберігаємо ваші ширини, але гарантуємо контейнер не виходить за межі 100% */
+@media (min-width: 992px) {
+  .container { max-width: 970px; margin: 0 auto; }
+  /* картки у 4 колонки залишаємо як float (як у вас) — додатково перестрахуємося: */
+  .img-1 { display: block; }
+  .img-1 li { float: left; width: 25%; }
+}
+
+/* Додатковий helper щоб уникнути злипання float'ів */
+.img-1::after { content: ""; display: table; clear: both; }
+
+
+/* ---------- QUICK FIX: вставити в кінець global.css ---------- */
+
+/* Захоплюємо і id і class (.img-1 або #img-1) щоб уникнути невідповідностей */
+#img-1, .img-1 { box-sizing: border-box; }
+
+/* Загальний clearfix (якщо десь залишилися float'и) */
+#img-1::after, .img-1::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Мобільні екрани: один елемент в рядок, прибираємо float, підлаштовуємо картинки */
+@media (max-width: 700px) {
+  /* секція меню/фотографій */
+  #f-img, #f-img.w-1000 {
+    width: 100% !important;
+    height: auto !important;
+    padding: 12px 10px;
+    box-sizing: border-box;
+    overflow: visible;
+  }
+
+  /* Якщо ваш список — id або class, застосуємо для обох */
+  #img-1, .img-1 {
+    display: block !important;
+    padding: 0;
+    margin: 0;
+  }
+
+  #img-1 li, .img-1 li {
+    float: none !important;
+    width: 100% !important;
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  .food-image {
+    width: 100% !important;
+  }
+
+  .food-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 16px; /* менш круглі на мобайлі */
+    display: block;
+  }
+
+  /* Якщо navbar фіксований зверху — додатковий padding, щоб контент не ховався */
+  .container .navbar, nav.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+  }
+  body {
+    padding-top: 56px; /* підлаштуйте під висоту вашого navbar (може бути 56 або 64) */
+  }
+
+  /* логотип та мови — менші на мобайлі */
+  .logo { font-size: 22px !important; line-height: 1.05 !important; margin: 10px 0; }
+  .language { transform: none !important; position: static !important; font-size: 14px !important; margin-bottom: 12px !important; }
+
+  /* зменшуємо великі секційні падінги */
+  .about-us { margin-top: 12px !important; padding: 28px 10px !important; }
+  .portfolio, .contact { padding: 28px 10px !important; }
+  .copiright { margin: 18px 0 30px !important; font-size: 13px !important; }
+}
+
+/* Планшет: дві колонки для списку карток */
+@media (min-width: 701px) and (max-width: 991.98px) {
+  #f-img { width: 100% !important; height: auto !important; padding: 14px 12px; }
+  #img-1, .img-1 {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  #img-1 li, .img-1 li {
+    float: none !important;
+    width: auto !important;
+    margin: 0;
+  }
+  .food-image { width: 100% !important; }
+  .logo { font-size: 34px !important; }
+  /* navbar — якщо фіксований, щоб не накривав: */
+  body { padding-top: 56px; }
+}
+
+/* Десктоп: повертаємо float/четвертинки (як у вас було) */
+@media (min-width: 992px) {
+  #f-img { width: 95vw; height: 600px; } /* якщо хочете зберегти оригінал */
+  #img-1, .img-1 { display: block; }
+  #img-1 li, .img-1 li { float: left; width: 25%; }
+  .food-image { width: 75%; } /* ваша початкова логіка */
+  body { padding-top: 0; } /* navbar може не бути фіксованим тут */
+}
+
+/* Додатково: уникнути немотивованого горизонтального скролу */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+

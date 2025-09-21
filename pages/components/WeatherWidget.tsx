@@ -6,51 +6,51 @@ export function PublicWeatherWidget() {
   const [w3, setW3] = useState('');
 
   useEffect(() => {
-    fetch('/api/weather')
-      .then(res => res.json())
-      .then(data => setW1(data.weather));
-
-    fetch('/api/weather/2')
-      .then(res => res.json())
-      .then(data => setW2(data.weather));
-
-    fetch('/api/weather/3')
-      .then(res => res.json())
-      .then(data => setW3(data.weather));
+    fetch('/api/weather').then(res => res.json()).then(d => setW1(d.weather));
+    fetch('/api/weather/2').then(res => res.json()).then(d => setW2(d.weather));
+    fetch('/api/weather/3').then(res => res.json()).then(d => setW3(d.weather));
   }, []);
 
-  const imagesByWeather: Record<string, string> = {
-    'Clear sky': './img/clear.jpg',
-    'Rain showers: Slight, moderate, and violent': './img/103.jpg',
-	'Rain: Slight, moderate and heavy intensity': './img/103.jpg',
-    'Fog and depositing rime fog': './img/fog.jpg',
+
+  const imagesByWeather: Record<string, string[]> = {
+    'Clear sky': ['./img/102.jpg', './img/103.jpg'],
+    'Rain showers: Slight, moderate, and violent': ['./img/104.jpg', './img/105.jpg'],
+    'Rain: Slight, moderate and heavy intensity': ['./img/104.jpg', './img/105.jpg'],
+    'Fog and depositing rime fog': ['./img/106.jpg', './img/107.jpg'],
   };
+
+  
+  function getImage(weather: string, index: number) {
+    const imgs = imagesByWeather[weather] || [];
+    if (imgs.length === 0) return '';
+    return imgs[index % imgs.length]; 
+  }
 
   return (
     <>
       <div style={{ fontSize: '1.2rem', marginLeft: '30px', marginTop: '20px', fontWeight: 'bold' }}>
-        Weather in City 1 is {w1}
+        Weather in Kyiv is {w1}.
       </div>
       <img
-        src={imagesByWeather[w1]}
+        src={getImage(w1, 0)}
         alt={w1}
         style={{ width: '300px', marginLeft: '530px', marginTop: '40px', marginBottom: '20px' }}
       />
 
       <div style={{ fontSize: '1.2rem', marginLeft: '30px', marginTop: '20px', fontWeight: 'bold' }}>
-        Weather in City 2 is {w2}
+        Weather in Dnipro is {w2}.
       </div>
       <img
-        src={imagesByWeather[w2]}
+        src={getImage(w2, 1)}
         alt={w2}
         style={{ width: '300px', marginLeft: '530px', marginTop: '40px', marginBottom: '20px' }}
       />
 
       <div style={{ fontSize: '1.2rem', marginLeft: '30px', marginTop: '20px', fontWeight: 'bold' }}>
-        Weather in City 3 is {w3}
+        Weather in Zaporozhye is {w3}.
       </div>
       <img
-        src={imagesByWeather[w3]}
+        src={getImage(w3, 2)}
         alt={w3}
         style={{ width: '300px', marginLeft: '530px', marginTop: '40px', marginBottom: '20px' }}
       />

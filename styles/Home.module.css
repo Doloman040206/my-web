@@ -227,3 +227,37 @@
     transform: rotate(0deg);
   }
 }
+
+
+/* ---------- ДОДАНІ ПРОСТІ АДАПТАЦІЇ (mobile-friendly overrides) ---------- */
+/* Зменшити великі внутрішні відступи на мобільних */
+@media (max-width: 700px) {
+  .main { padding: 2.5rem 1rem; min-height: auto; }
+  .description { padding: 0 8px; font-size: 0.82rem; }
+  .center { padding: 4rem 0 3rem; }
+  .center::before { width: 320px; height: 220px; margin-left: -200px; filter: blur(36px); }
+  .grid { margin: 0 auto 24px; max-width: 380px; }
+}
+
+/* Планшет: трохи ширші відступи */
+@media (min-width: 701px) and (max-width: 1120px) {
+  .main { padding: 4rem; }
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .card { padding: 1rem; }
+}
+
+/* Десктоп: помірні відступи замість 6rem */
+@media (min-width: 1121px) {
+  .main { padding: 4rem 6rem; }
+  .grid { grid-template-columns: repeat(4, minmax(25%, auto)); }
+}
+
+/* Адаптація для маленьких екранів: зменшити ефекти, щоб не навантажувати */
+@media (max-width: 420px) {
+  .card { padding: 0.8rem 1rem; }
+  .card p { font-size: 0.9rem; }
+  .center { padding: 3rem 0; }
+}
+
+
+

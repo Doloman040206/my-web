@@ -44,7 +44,7 @@ function weatherCodeToText(weather_code: number) {
 }
 
 export async function GET() {
-    const response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=51.5074&longitude=-0.1278&daily=weather_code&timezone=auto&forecast_days=1")
+    const response = await fetch("https://api.open-meteo.com/v1/forecast?latitude=47.8388&longitude=35.139567&daily=weather_code&timezone=auto&forecast_days=1")
     const data = await response.json()
     const weather_code = data.daily.weather_code[0]
     return NextResponse.json({

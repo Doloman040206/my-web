@@ -59,7 +59,10 @@ export function PizaListItem(props: PizaListItemProps) {
 
                     }}
 
-                onClick={() => props.onDelete(props.piza.id)}
+                onClick={() => {
+                const ok = window.confirm('Ви дійсно бажаєте видалити піцу "' + props.piza.name + '"?');
+                if (ok) props.onDelete(props.piza.id);
+                }}
                 >
                     Delete
                 </button>

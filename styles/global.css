@@ -429,3 +429,47 @@ html, body {
   overflow-x: hidden;
 }
 
+
+
+/* ----------------- Responsive social icons fix ----------------- */
+/* Надано гнучку верстку для іконок соцмереж, щоб вони не "роз'їжджались" */
+.soc {
+  display: flex;
+  justify-content: center; /* центр позиціювання по горизонталі */
+  align-items: center;
+  gap: 24px;               /* читаємо відстань між іконками (краще за margin на a) */
+  flex-wrap: wrap;         /* дозволяє переносити іконки на новий рядок */
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 12px;         /* невеликий padding щоб іконки не були впритул до краю */
+}
+
+/* Забираємо великі margin'и на самих лінках і робимо їх однаковими */
+.soc a {
+  margin: 0;               /* видалити margin: 0 30px; з основного стилю */
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 40px;
+  min-height: 40px;        /* забезпечує однаковий hit-area */
+  padding: 6px;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+/* Невелика адаптація для дуже малих екранів */
+@media (max-width: 520px) {
+  .soc { gap: 12px; padding: 0 8px; }
+  .soc a { min-width: 36px; min-height: 36px; padding: 4px; }
+}
+
+/* Якщо в коді є правило .soc > div { justify-content: space-between; } — воно конфліктує з центруванням.
+   Перекриваємо його (виконається останнім завдяки розміщенню в кінці файлу) */
+.soc > div {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100%;
+  gap: inherit;
+}
+

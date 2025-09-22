@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head'
 import { PublicPizaList } from './components/PublicPizaList';
 import { PublicWeatherWidget } from './components/WeatherWidget';
@@ -6,6 +6,33 @@ import { PublicWeatherWidget } from './components/WeatherWidget';
 
 
 const App = () => {
+
+	useEffect(() => {
+  const collapse = document.getElementById('navbarSupportedContent');
+  if (!collapse) return;
+
+  const links = collapse.querySelectorAll('.nav-link');
+  const handler = () => {
+    // Якщо підключено jQuery + Bootstrap, викликаємо їхній метод hide()
+    if ((window as any).jQuery && typeof (window as any).jQuery === 'function') {
+      try {
+        (window as any).jQuery(collapse).collapse('hide');
+        return;
+      } catch (err) {
+        // якщо щось пішло не так — падаємо до фолбеку
+      }
+    }
+    // Фолбек: просто прибираємо клас 'show'
+    if (collapse.classList.contains('show')) {
+      collapse.classList.remove('show');
+    }
+  };
+
+  links.forEach(link => link.addEventListener('click', handler));
+
+  // cleanup при демонтажі
+  return () => links.forEach(link => link.removeEventListener('click', handler));
+}, []);
 
 	return <>
 		<Head>

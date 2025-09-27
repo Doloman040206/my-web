@@ -6,55 +6,34 @@ import { PizaObject } from './types';
 const App: React.FC = () => {
   const [pizaList, setPizaList] = useState<PizaObject[]>([]);
 
-  // --- API helpers ---
-
-  // Create (POST) — залишено без змін (може приймати image)
   async function apiCreatePiza(name: string, ingridients: string, price: number, image: string | null) {
-    try {
-      const res = await fetch('/api/piza', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, ingridients, price, image })
-      });
-      if (!res.ok) throw new Error('Create request failed: ' + res.status);
-      return await res.json();
-    } catch (err) {
-      console.error('apiCreatePiza error', err);
-      throw err;
-    }
+    const res = await fetch('/api/piza', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, ingridients, price, image })
+    });
+    if (!res.ok) throw new Error('Create request failed: ' + res.status);
+    return await res.json();
   }
 
-  // Edit (PUT) — ТЕРМІНОВО: більше не відсилаємо image
   async function apiEditPiza(id: number, name: string, ingridients: string, price: number) {
-    try {
-      const res = await fetch(`/api/piza/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, ingridients, price })
-      });
-      if (!res.ok) throw new Error('Edit request failed: ' + res.status);
-      return await res.json();
-    } catch (err) {
-      console.error('apiEditPiza error', err);
-      throw err;
-    }
+    const res = await fetch(`/api/piza/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, ingridients, price })
+    });
+    if (!res.ok) throw new Error('Edit request failed: ' + res.status);
+    return await res.json();
   }
 
-  // Delete (DELETE)
   async function apiDeletePiza(id: number) {
-    try {
-      const res = await fetch(`/api/piza/${id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Delete request failed: ' + res.status);
-      return await res.json();
-    } catch (err) {
-      console.error('apiDeletePiza error', err);
-      throw err;
-    }
+    const res = await fetch(`/api/piza/${id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) throw new Error('Delete request failed: ' + res.status);
+    return await res.json();
   }
 
-  // Fetch list
   const fetchPizaList = async () => {
     try {
       const res = await fetch('/api/piza');
@@ -71,36 +50,32 @@ const App: React.FC = () => {
     fetchPizaList();
   }, []);
 
-  // --- Handlers used by children ---
-
-  // addItem: Create new pizza (passes image as string|null)
   async function addItem(name: string, ingridients: string, price: number, image: string | null) {
     try {
-      const created = await apiCreatePiza(name, ingridients, price, image);
-      console.log('Created:', created);
+      await apiCreatePiza(name, ingridients, price, image);
       await fetchPizaList();
-    } catch (err) {
+      // мінімальна нотифікація для інших вкладок
+      try { localStorage.setItem('piza-updated', String(Date.now())); } catch (e) { /* ignore */ }
+    } catch {
       alert('Create failed. See console.');
     }
   }
 
-  // deleteItem
   async function deleteItem(id: number) {
     try {
-      const deleted = await apiDeletePiza(id);
-      console.log('Deleted:', deleted);
+      await apiDeletePiza(id);
       await fetchPizaList();
-    } catch (err) {
+      try { localStorage.setItem('piza-updated', String(Date.now())); } catch (e) { /* ignore */ }
+    } catch {
       alert('Delete failed. See console.');
     }
   }
 
-  // editItem: більше не приймає image — лише id, name, ingridients, price
   async function editItem(id: number, name: string, ingridients: string, price: number) {
     try {
-      const edited = await apiEditPiza(id, name, ingridients, price);
-      console.log('Edited:', edited);
+      await apiEditPiza(id, name, ingridients, price);
       await fetchPizaList();
+      try { localStorage.setItem('piza-updated', String(Date.now())); } catch (e) { /* ignore */ }
     } catch (err) {
       console.error('editItem error', err);
       alert('Edit failed. See console.');
@@ -108,64 +83,20 @@ const App: React.FC = () => {
   }
 
   return (
-    <div
-      style={{
-        fontFamily: 'Arial, sans-serif',
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '20px',
-      }}
-    >
-      <div
-        style={{
-          textAlign: 'center',
-          fontSize: '2.5rem',
-          fontWeight: 'bold',
-          marginBottom: '20px',
-          color: 'green',
-        }}
-      >
-        Admin
+    <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '900px', margin: '20px auto', padding: '10px' }}>
+      <h1 style={{ textAlign: 'center', color: 'green', fontSize: '2.2rem', marginBottom: '18px' }}>Admin</h1>
+
+      <div style={{ marginBottom: '18px' }}>
+        <CreatePizaForm addItem={addItem} />
       </div>
 
-      <div
-        style={{
-          textAlign: 'center',
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          marginBottom: '20px',
-        }}
-      >
-        Piza List
-      </div>
-
-      <CreatePizaForm addItem={addItem} />
-	  <div
-        style={{
-          background: '#f9f9f9',
-          padding: '20px',
-          borderRadius: '8px'
-        }}
-      >
+      <div>
         {pizaList.length > 0 ? (
           pizaList.map((item) => (
-            <PizaListItem
-              key={item.id}
-              piza={item}
-              onDelete={deleteItem}
-              onEdit={editItem} // onEdit тепер (id,name,ingridients,price)
-            />
+            <PizaListItem key={item.id} piza={item} onDelete={deleteItem} onEdit={editItem} />
           ))
         ) : (
-          <div
-            style={{
-              textAlign: 'center',
-              fontSize: '1.2rem',
-              color: '#777'
-            }}
-          >
-            No items in the list
-          </div>
+          <div style={{ textAlign: 'center', fontSize: '1.1rem', color: '#777' }}>No items in the list</div>
         )}
       </div>
     </div>

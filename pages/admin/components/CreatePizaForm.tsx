@@ -1,32 +1,73 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 export interface ICreatePizaFormProps {
-    addItem: (name: string, ingredients: string, price: number) => void;
+    // Четвертий параметр image: string | null — ім'я файлу (наприклад "5.jpg")
+    addItem: (name: string, ingredients: string, price: number, image: string | null) => void;
 }
 
 export function CreatePizaForm(props: ICreatePizaFormProps) {
     const [nameInput, setNameInput] = useState('');
     const [ingredientsInput, setIngredientsInput] = useState('');
     const [priceInput, setPriceInput] = useState('');
+    const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    // допустимі розширення
+    const allowedExt = /\.(png|jpe?g)$/i;
+
+    const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) {
+            setSelectedFileName(null);
+            return;
+        }
+
+        if (!allowedExt.test(file.name)) {
+            alert('Доступні формати зображень: .png, .jpg, .jpeg');
+            // скидаємо вибір
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            setSelectedFileName(null);
+            return;
+        }
+
+        // зберігаємо тільки ім'я файлу (наприклад "5.jpg")
+        setSelectedFileName(file.name);
+    };
+
+    const onClickImageBox = () => {
+        if (fileInputRef.current) fileInputRef.current.click();
+    };
 
     const addItem = () => {
-        // 1. check all fields are 
+        // 1. перевірка усіх основних полів
         if (!nameInput || !ingredientsInput || !priceInput) {
             alert('Please, fill all fields');
             return;
         }
-        let parsedPrice = parseFloat(priceInput)
+        let parsedPrice = parseFloat(priceInput);
         if (isNaN(parsedPrice)) {
             alert('Wrong price');
             return;
         }
-        // 2. call props.addItem() with new object
-        props.addItem(nameInput, ingredientsInput, parsedPrice);
-        
-        // 3. reset all inputs/fields
-        setNameInput('')
-        setIngredientsInput('')
-        setPriceInput('')
+
+        // 2. виклик props.addItem() з четвертим параметром image (ім'я файлу або null)
+        props.addItem(nameInput, ingredientsInput, parsedPrice, selectedFileName);
+
+        // 3. скидання полів
+        setNameInput('');
+        setIngredientsInput('');
+        setPriceInput('');
+        setSelectedFileName(null);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+    };
+
+    // Стилі — ті ж візуальні характеристики, що й у інших полів
+    const commonInputStyle: React.CSSProperties = {
+        fontSize: '1.2rem',
+        padding: '10px',
+        borderRadius: '4px',
+        border: '1px solid #ccc',
     };
 
     return (
@@ -36,18 +77,13 @@ export function CreatePizaForm(props: ICreatePizaFormProps) {
                 <input
                     id="nameInput"
                     style={{
-                        fontSize: '1.2rem',
-                        padding: '10px',
+                        ...commonInputStyle,
                         width: '492px',
                         marginRight: '10px',
-
-                        borderRadius: '4px',
-                        border: '1px solid #ccc',
                     }}
                     placeholder="Add name..."
                     value={nameInput}
-                    onChange={(event) =>
-                        setNameInput(event.target.value)}
+                    onChange={(event) => setNameInput(event.target.value)}
                 />
             </div>
 
@@ -56,42 +92,66 @@ export function CreatePizaForm(props: ICreatePizaFormProps) {
                 <input
                     id="ingredientsInput"
                     style={{
-                        fontSize: '1.2rem',
-                        padding: '10px',
+                        ...commonInputStyle,
                         width: '492px',
                         marginRight: '10px',
-
-                        borderRadius: '4px',
-                        border: '1px solid #ccc',
                     }}
                     placeholder="Add ingridients..."
                     value={ingredientsInput}
-                    onChange={(event) =>
-                        setIngredientsInput(event.target.value)}
+                    onChange={(event) => setIngredientsInput(event.target.value)}
                 />
             </div>
-
-
+            {/* Price — окремий рядок (така ж ширина як name/ingredients) */}
             <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
                 <label htmlFor="priceInput" style={{ marginRight: '20px', fontSize: '1.2rem' }}>Price:</label>
                 <input
                     id="priceInput"
                     style={{
-                        fontSize: '1.2rem',
-                        padding: '10px',
-                        width: '402px',
-
+                        ...commonInputStyle,
+                        width: '492px',
                         marginRight: '10px',
-
-                        borderRadius: '4px',
-                        border: '1px solid #ccc',
                     }}
                     placeholder="Add price..."
                     value={priceInput}
-                    onChange={(event) =>
-                        setPriceInput(event.target.value)}
+                    onChange={(event) => setPriceInput(event.target.value)}
                 />
-                
+            </div>
+
+            {/* Image — окремий рядок, рамка як у name/ingredients, клікабельний текст 'Add image' або ім'я файлу */}
+            <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
+                <label htmlFor="imageInput" style={{ marginRight: '12px', fontSize: '1.2rem' }}>Image:</label>
+
+                <div
+                    onClick={onClickImageBox}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClickImageBox(); }}
+                    style={{
+                        ...commonInputStyle,
+                        width: '492px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'flex-start',
+                        cursor: 'pointer',
+                        marginRight: '12px',
+                        userSelect: 'none',
+                    }}
+                >
+                    <span style={{ fontSize: '1.2rem', color: selectedFileName ? '#000' : '#666', marginLeft: '4px' }}>
+                        {selectedFileName ? selectedFileName : 'Add image...'}
+                    </span>
+                </div>
+
+                {/* Ховаємо реальний input[type=file] */}
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".png, .jpg, .jpeg"
+                    onChange={onFileChange}
+                    style={{ display: 'none' }}
+                />
+
+                {/* Кнопка ADD поруч з image-рамкою */}
                 <button
                     style={{
                         fontSize: '1.2rem',
@@ -107,10 +167,6 @@ export function CreatePizaForm(props: ICreatePizaFormProps) {
                     ADD
                 </button>
             </div>
-
-
-
         </div>
-    )
-
+    );
 }

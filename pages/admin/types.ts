@@ -4,4 +4,5 @@ export interface PizaObject {
     name: string
     ingridients: string
     price: number
+    images?:string
 }

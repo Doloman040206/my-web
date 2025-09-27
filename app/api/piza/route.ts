@@ -1,45 +1,45 @@
+// app/api/piza/route.ts
 import { NextRequest, NextResponse } from "next/server";
-
 import pool from "@/app/libs/piza";
-import { create } from "domain";
-import { request } from "http";
 
 export async function GET() {
     try {
-        const db = await pool.getConnection()
-        const query = 'select * from piza'
-        const [id] = await db.execute(query)
-        db.release()
-        
-        return NextResponse.json(id)
+        const db = await pool.getConnection();
+        const query = 'SELECT * FROM piza';
+        const [rows] = await db.execute(query);
+        db.release();
+
+        return NextResponse.json(rows);
     } catch (error) {
-        return NextResponse.json({
-            error: error
-        }, { status: 500 })
+        return NextResponse.json({ error }, { status: 500 });
     }
 }
 
+export async function POST(request: NextRequest) {
+    try {
+        const data = await request.json();
+        const db = await pool.getConnection();
 
+        // беремо значення images з тіла (може бути data.image або data.images)
+        const imagesValue = data.image ?? data.images ?? null;
 
+        const query = 'INSERT INTO piza (name, ingridients, price, images) VALUES (?, ?, ?, ?)';
+        const [result] = await db.execute(query, [data.name, data.ingridients, data.price, imagesValue]);
 
-export async function POST(
-    request:  NextRequest,
-    
-) {
-    const data = await request.json();
-    const db = await pool.getConnection()        
-    
-    const query = 'Insert into piza (name,ingridients,price) VALUES(?,?,?)'
-    const [rows] = await db.execute(query,[data.name,data.ingridients,data.price]) 
+        // @ts-ignore — result.insertId
+        const insertId = (result as any).insertId;
 
-    const querySelectCreated = 'Select * from piza where id = ?'
-    // @ts-ignore
-    const [result] = await db.execute(querySelectCreated,[rows.insertId]) 
+        const querySelectCreated = 'SELECT * FROM piza WHERE id = ?';
+        // @ts-ignore
+        const [createdRows] = await db.execute(querySelectCreated, [insertId]);
 
-    db.release() 
-    // @ts-ignore
-    return NextResponse.json(result[0])
-} 
+        db.release();
+        // @ts-ignore
+        return NextResponse.json(createdRows[0]);
+    } catch (error) {
+        return NextResponse.json({ error }, { status: 500 });
+    }
+}
 
 
 

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/app/libs/piza";
-import { ok } from "assert";
 
 
 // export async function GET(
@@ -58,52 +57,46 @@ import { ok } from "assert";
 
 
 export async function PUT(
-    request:  NextRequest,
+    request: NextRequest,
     { params }: { params: { id: string } }
 ) {
-    const id = params.id // user id
-    
+    const id = params.id;
 
-        const requestData = await request.json()
-        const { name,ingridients,price } = requestData
+    try {
+        const requestData = await request.json();
+        const { name, ingridients, price } = requestData;
+        // NOTE: Повністю видалено все що стосується image/images при оновленні.
 
-        const db = await pool.getConnection()
+        const db = await pool.getConnection();
 
-        const UPDATEquery = 'UPDATE piza SET name = ?, ingridients = ?, price = ? WHERE id = ?'
-        const selectquery = 'select * from piza where id = ?'
-        await db.execute(UPDATEquery, [name, ingridients, price, id ])
-        const [rows] = await db.execute(selectquery,[id])
-        db.release()
-// @ts-ignore
-        return NextResponse.json(rows[0])
-    
+        // Оновлюємо тільки name, ingridients, price — не чіпаємо колонку images
+        const UPDATEquery = 'UPDATE piza SET name = ?, ingridients = ?, price = ? WHERE id = ?';
+        const selectquery = 'SELECT * FROM piza WHERE id = ?';
+        await db.execute(UPDATEquery, [name, ingridients, price, id]);
+        const [rows] = await db.execute(selectquery, [id]);
+        db.release();
+        // @ts-ignore
+        return NextResponse.json(rows[0]);
+    } catch (error) {
+        return NextResponse.json({ error }, { status: 500 });
+    }
 }
-
-
-
-
-
 
 export async function DELETE(
     request: NextRequest,
     { params }: { params: { id: string } }
 ) {
-    const nameToDelete = params.id
+    const idToDelete = params.id;
 
     try {
-        
-        const db = await pool.getConnection()
-        
-        const query = 'DELETE FROM piza WHERE id = ?'
-        const [rows] = await db.execute(query, [nameToDelete])
-        
-        db.release()
+        const db = await pool.getConnection();
+        const query = 'DELETE FROM piza WHERE id = ?';
+        const [rows] = await db.execute(query, [idToDelete]);
+        db.release();
         // @ts-ignore
-        return NextResponse.json({status:'ok',rows})
+        return NextResponse.json({ status: 'ok', rows });
     } catch (error) {
-        return NextResponse.json({
-            error: error
-        }, { status: 500 })
+        return NextResponse.json({ error }, { status: 500 });
     }
 }
 

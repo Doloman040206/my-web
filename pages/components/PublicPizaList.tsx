@@ -43,7 +43,11 @@ export function PublicPizaList() {
     <>
       {pizaList.length > 0 ? (
         pizaList.map((item, index) => {
-          const srcFromDb = (item as any).images ? `./img/${(item as any).images}` : undefined;
+          // виправлений шлях з БД (якщо є)
+          const srcFromDb =
+            (item as any).images && (item as any).images.length
+              ? `./img/${(item as any).images}`
+              : undefined;
           const imageSrc = srcFromDb ?? (imagesByName as any)[item.name] ?? './img/99.jpg';
 
           return (
@@ -51,8 +55,9 @@ export function PublicPizaList() {
               <div style={{ fontSize: '1.2rem', color: '#333' }}>
                 Piza <b>"{item.name}"</b> with {item.ingridients} at <b>{item.price}</b>$
               </div>
-              <div>
+              <div className="site-img-wrap">
                 <img
+                  className="site-img"
                   src={imageSrc}
                   alt={item.name}
                   style={{ width: '300px', marginLeft: '500px', marginTop: '20px' }}

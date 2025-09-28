@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 
 export interface ICreatePizaFormProps {
-    // Четвертий параметр image: string | null — ім'я файлу (наприклад "5.jpg")
     addItem: (name: string, ingredients: string, price: number, image: string | null) => void;
 }
 
@@ -12,8 +11,6 @@ export function CreatePizaForm(props: ICreatePizaFormProps) {
     const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-    // допустимі розширення
     const allowedExt = /\.(png|jpe?g)$/i;
 
     const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,16 +19,12 @@ export function CreatePizaForm(props: ICreatePizaFormProps) {
             setSelectedFileName(null);
             return;
         }
-
         if (!allowedExt.test(file.name)) {
             alert('Доступні формати зображень: .png, .jpg, .jpeg');
-            // скидаємо вибір
             if (fileInputRef.current) fileInputRef.current.value = '';
             setSelectedFileName(null);
             return;
         }
-
-        // зберігаємо тільки ім'я файлу (наприклад "5.jpg")
         setSelectedFileName(file.name);
     };
 
@@ -40,7 +33,6 @@ export function CreatePizaForm(props: ICreatePizaFormProps) {
     };
 
     const addItem = () => {
-        // 1. перевірка усіх основних полів
         if (!nameInput || !ingredientsInput || !priceInput) {
             alert('Please, fill all fields');
             return;
@@ -50,11 +42,8 @@ export function CreatePizaForm(props: ICreatePizaFormProps) {
             alert('Wrong price');
             return;
         }
-
-        // 2. виклик props.addItem() з четвертим параметром image (ім'я файлу або null)
         props.addItem(nameInput, ingredientsInput, parsedPrice, selectedFileName);
 
-        // 3. скидання полів
         setNameInput('');
         setIngredientsInput('');
         setPriceInput('');
@@ -62,87 +51,66 @@ export function CreatePizaForm(props: ICreatePizaFormProps) {
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
-    // Стилі — ті ж візуальні характеристики, що й у інших полів
-    const commonInputStyle: React.CSSProperties = {
-        fontSize: '1.2rem',
-        padding: '10px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
+    const styles = {
+        page: { maxWidth: 980, margin: '0 auto', padding: '24px 12px', fontFamily: 'Helvetica, Arial, sans-serif' },
+        subtitle: { textAlign: 'center' as const, fontSize: '23px', fontWeight: 700, marginBottom: '22px', color: '#222' },
+        formRow: { display: 'flex', alignItems: 'center', marginBottom: '12px' },
+        label: { width: '80px', marginRight: '12px', fontSize: '1.05rem', color: '#222' },
+        input: { fontSize: '1.1rem', padding: '10px 12px', borderRadius: '6px', border: '1px solid #e0e0e0', width: '492px', boxSizing: 'border-box' as const },
+        imageBox: { fontSize: '1.1rem', padding: '10px 12px', borderRadius: '6px', border: '1px solid #e0e0e0', width: '467px', display: 'flex', alignItems: 'center', cursor: 'pointer', userSelect: 'none' as const, marginRight: '6px' },
+        addButton: { fontSize: '1.05rem', padding: '10px 18px', backgroundColor: '#28a745', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer' },
     };
 
     return (
-        <div>
-            <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                <label htmlFor="nameInput" style={{ marginRight: '12px', fontSize: '1.2rem' }}>Name:</label>
+        <div style={styles.page}>
+            
+            <div style={styles.subtitle}>Piza List</div>
+
+            <div style={styles.formRow}>
+                <label htmlFor="nameInput" style={styles.label}>Name:</label>
                 <input
                     id="nameInput"
-                    style={{
-                        ...commonInputStyle,
-                        width: '492px',
-                        marginRight: '10px',
-                    }}
+                    style={styles.input}
                     placeholder="Add name..."
                     value={nameInput}
-                    onChange={(event) => setNameInput(event.target.value)}
+                    onChange={(e) => setNameInput(e.target.value)}
                 />
             </div>
 
-            <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                <label htmlFor="ingredientsInput" style={{ marginRight: '10px', fontSize: '1.2rem', marginLeft: '-35px' }}>Ingridients:</label>
+            <div style={styles.formRow}>
+                <label htmlFor="ingredientsInput" style={styles.label}>Ingredients:</label>
                 <input
                     id="ingredientsInput"
-                    style={{
-                        ...commonInputStyle,
-                        width: '492px',
-                        marginRight: '10px',
-                    }}
-                    placeholder="Add ingridients..."
+                    style={styles.input}
+                    placeholder="Add ingredients..."
                     value={ingredientsInput}
-                    onChange={(event) => setIngredientsInput(event.target.value)}
+                    onChange={(e) => setIngredientsInput(e.target.value)}
                 />
             </div>
-            {/* Price — окремий рядок (така ж ширина як name/ingredients) */}
-            <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                <label htmlFor="priceInput" style={{ marginRight: '20px', fontSize: '1.2rem' }}>Price:</label>
+            <div style={styles.formRow}>
+                <label htmlFor="priceInput" style={styles.label}>Price:</label>
                 <input
                     id="priceInput"
-                    style={{
-                        ...commonInputStyle,
-                        width: '492px',
-                        marginRight: '10px',
-                    }}
+                    style={styles.input}
                     placeholder="Add price..."
                     value={priceInput}
-                    onChange={(event) => setPriceInput(event.target.value)}
+                    onChange={(e) => setPriceInput(e.target.value)}
                 />
             </div>
 
-            {/* Image — окремий рядок, рамка як у name/ingredients, клікабельний текст 'Add image' або ім'я файлу */}
-            <div style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-                <label htmlFor="imageInput" style={{ marginRight: '12px', fontSize: '1.2rem' }}>Image:</label>
-
+            <div style={styles.formRow}>
+                <label htmlFor="imageInput" style={styles.label}>Image:</label>
                 <div
                     onClick={onClickImageBox}
                     role="button"
                     tabIndex={0}
                     onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClickImageBox(); }}
-                    style={{
-                        ...commonInputStyle,
-                        width: '492px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'flex-start',
-                        cursor: 'pointer',
-                        marginRight: '12px',
-                        userSelect: 'none',
-                    }}
+                    style={styles.imageBox}
                 >
-                    <span style={{ fontSize: '1.2rem', color: selectedFileName ? '#000' : '#666', marginLeft: '4px' }}>
+                    <span style={{ color: selectedFileName ? '#000' : '#666' }}>
                         {selectedFileName ? selectedFileName : 'Add image...'}
                     </span>
                 </div>
-
-                {/* Ховаємо реальний input[type=file] */}
                 <input
                     ref={fileInputRef}
                     type="file"
@@ -150,22 +118,7 @@ export function CreatePizaForm(props: ICreatePizaFormProps) {
                     onChange={onFileChange}
                     style={{ display: 'none' }}
                 />
-
-                {/* Кнопка ADD поруч з image-рамкою */}
-                <button
-                    style={{
-                        fontSize: '1.2rem',
-                        padding: '10px 20px',
-                        backgroundColor: '#4caf50',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                    }}
-                    onClick={addItem}
-                >
-                    ADD
-                </button>
+                <button style={styles.addButton} onClick={addItem}>ADD</button>
             </div>
         </div>
     );

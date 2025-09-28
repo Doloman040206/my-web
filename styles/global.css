@@ -1,3 +1,5 @@
+/* ---------- (усі ваші попередні правила — не змінені) ---------- */
+
 .container {
     max-width: 970px;
 }
@@ -266,7 +268,6 @@ nav .nav-link {
 }
 
 /* ---------- ДОДАНІ ПРОСТІ АДАПТАЦІЇ (mobile-first overrides) ---------- */
-
 /* Основні корекції для дуже маленьких екранів */
 @media (max-width: 520px) {
   /* контейнер — не виходити за межі екрану */
@@ -274,7 +275,7 @@ nav .nav-link {
   /* карусель і секція меню — зробити висоту адаптивною */
   #f-img { height: auto; width: 100%; padding: 10px 0; }
 
-  /* список карток — прибираємо float і показуємо по одній в ряд */
+/* список карток — прибираємо float і показуємо по одній в ряд */
   .img-1 { display: block; padding: 0 8px; }
   .img-1 li { float: none; width: 100%; margin-bottom: 14px; display: block; }
 
@@ -394,7 +395,6 @@ nav .nav-link {
   .portfolio, .contact { padding: 28px 10px !important; }
   .copiright { margin: 18px 0 30px !important; font-size: 13px !important; }
 }
-
 /* Планшет: дві колонки для списку карток */
 @media (min-width: 701px) and (max-width: 991.98px) {
   #f-img { width: 100% !important; height: auto !important; padding: 14px 12px; }
@@ -473,3 +473,57 @@ html, body {
   gap: inherit;
 }
 
+/* ----------------- NEW TARGETED RULE: only MENU (menu-scope) on small screens ----------------- */
+
+/* ЦЕЙ БЛОК ПРАЦЮЄ ЛИШЕ ДЛЯ .menu-scope і ТІЛЬКИ ДЛЯ ЕКРАНІВ <1000px */
+@media (max-width: 999px) {
+  /* контейнер меню */
+  .menu-scope {
+    width: 100% !important;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Якщо у PublicPizaList кожен елемент має inline margin — скидаємо їх всередині menu-scope */
+  .menu-scope > * ,
+  .menu-scope .piza-item,
+  .menu-scope .piza-item > div,
+  .menu-scope .piza-entry,
+  .menu-scope #img-1 li,
+  .menu-scope .img-1 li {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    float: none !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Центруємо самі картинки у меню (перекриваємо інлайн-стилі через !important) */
+  .menu-scope img,
+  .menu-scope img[style] {
+    display: block !important;
+    width: 90% !important;
+    max-width: 320px !important;
+    height: auto !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 12px !important;
+    margin-bottom: 12px !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    float: none !important;
+    object-fit: contain !important;
+    border-radius: 12px !important;
+  }
+  /* Якщо потрібен тонкий контроль для very small screens */
+  @media (max-width: 420px) {
+    .menu-scope img,
+    .menu-scope img[style] {
+      max-width: 300px !important;
+      width: 90% !important;
+    }
+  }
+}

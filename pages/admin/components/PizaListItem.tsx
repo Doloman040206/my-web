@@ -26,78 +26,65 @@ export function PizaListItem(props: PizaListItemProps) {
         break;
       }
     }
-
     props.onEdit(props.piza.id, newName, newIngridients, newPrice!);
   }
 
-  const imageName = (props.piza as any).images ?? null;
+  const imageName = (props.piza as any).image ?? (props.piza as any).images ?? null;
 
-  // Ваші стилі кнопок (взято з прикладу)
-  const buttonStyleBase: React.CSSProperties = {
-    fontSize: '1.2rem',
-    padding: '10px 20px',
-    color: 'white',
-    border: 'none',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    width: '110px',
+  const styles = {
+    card: { display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '28px 30px', background: '#f6f6f6', borderRadius: '8px', marginBottom: '20px' },
+    left: { flex: '1 1 auto', paddingRight: '20px' },
+    row: { marginBottom: '16px', display: 'flex', alignItems: 'center' },
+    label: { width: '100px', fontSize: '1.05rem', color: '#333', marginRight: '8px' },
+    value: { fontWeight: 700, fontSize: '1.2rem', color: '#111' },
+    actions: { display: 'flex', flexDirection: 'column' as const, gap: '12px', alignItems: 'flex-end' },
+    btn: { width: '110px', fontSize: '1.05rem', padding: '8px 14px', color: '#fff', border: 'none', borderRadius: '8px', cursor: 'pointer' },
+    btnDelete: { backgroundColor: '#11820b' },
+    btnEdit: { backgroundColor: '#0839ff' },
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start', // вирівнюємо кнопки по верхньому краю тексту
-        padding: '16px',
-        background: '#ffffff',
-        borderRadius: '8px',
-        boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-        marginBottom: '18px',
-      }}
-    >
-      {/* Ліва колонка: текст (Name / Ingredients / Price) */}
-      <div style={{ flex: '1 1 auto', paddingRight: '20px' }}>
-        <div style={{ marginBottom: '12px' }}>
-          <label style={{ marginRight: '10px', fontSize: '1.2rem', color: '#333' }}>Name:</label>
-          <span style={{ fontWeight: '700', fontSize: '1.2rem' }}>{props.piza.name}</span>
+    <div style={styles.card}>
+      <div style={styles.left}>
+        <div style={styles.row}>
+          <label style={styles.label}>Name:</label>
+          <div style={styles.value}>{props.piza.name}</div>
         </div>
 
-        <div style={{ marginBottom: '12px' }}>
-          <label style={{ marginRight: '10px', fontSize: '1.2rem', color: '#333' }}>Ingredients:</label>
-          <span style={{ fontWeight: '700', fontSize: '1.2rem' }}>{props.piza.ingridients}</span>
+        <div style={styles.row}>
+          <label style={styles.label}>Ingredients:</label>
+          <div style={styles.value}>{props.piza.ingridients}</div>
         </div>
 
-        <div style={{ marginBottom: '12px' }}>
-          <label style={{ marginRight: '10px', fontSize: '1.2rem', color: '#333' }}>Price:</label>
-          <span style={{ fontWeight: '700', fontSize: '1.2rem' }}>{props.piza.price}</span>
+        <div style={styles.row}>
+          <label style={styles.label}>Price:</label>
+          <div style={styles.value}>{props.piza.price}</div>
         </div>
 
         {imageName && (
-          <div style={{ marginTop: '4px' }}>
-            <label style={{ marginRight: '10px', fontSize: '1.05rem', color: '#666' }}>Image:</label>
-            <span style={{ fontWeight: '600', fontSize: '1.05rem' }}>{imageName}</span>
+          <div style={styles.row}>
+            <label style={{ ...styles.label, fontSize: '1.0rem', color: '#666' }}>Image:</label>
+            <div style={{ ...styles.value, fontWeight: 600, fontSize: '1.05rem' }}>{imageName}</div>
           </div>
         )}
       </div>
 
-      {/* Права колонка: одна пара кнопок (Edit над Delete), вирівняна по верхньому краю */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+      <div style={styles.actions}>
         <button
-          style={{ ...buttonStyleBase, backgroundColor: 'blue' }}
-          onClick={onClickEdit}
-        >
-          Edit
-        </button>
-
-        <button
-          style={{ ...buttonStyleBase, backgroundColor: 'green' }}
+          style={{ ...styles.btn, ...styles.btnDelete }}
           onClick={() => {
             const ok = window.confirm('Ви дійсно бажаєте видалити піцу "' + props.piza.name + '"?');
             if (ok) props.onDelete(props.piza.id);
           }}
         >
           Delete
+        </button>
+
+        <button
+          style={{ ...styles.btn, ...styles.btnEdit }}
+          onClick={onClickEdit}
+        >
+          Edit
         </button>
       </div>
     </div>

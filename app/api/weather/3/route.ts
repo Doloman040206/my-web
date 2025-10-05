@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import pool from "@/app/libs/mysql";
-import { create } from "domain";
-import { request } from "http";
-
 
 function weatherCodeToText(weather_code: number) {
     switch (weather_code) {

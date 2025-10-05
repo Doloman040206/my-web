@@ -65,11 +65,7 @@ export async function PUT(
     try {
         const requestData = await request.json();
         const { name, ingridients, price } = requestData;
-        // NOTE: Повністю видалено все що стосується image/images при оновленні.
-
         const db = await pool.getConnection();
-
-        // Оновлюємо тільки name, ingridients, price — не чіпаємо колонку images
         const UPDATEquery = 'UPDATE piza SET name = ?, ingridients = ?, price = ? WHERE id = ?';
         const selectquery = 'SELECT * FROM piza WHERE id = ?';
         await db.execute(UPDATEquery, [name, ingridients, price, id]);
@@ -93,7 +89,6 @@ export async function DELETE(
         const query = 'DELETE FROM piza WHERE id = ?';
         const [rows] = await db.execute(query, [idToDelete]);
         db.release();
-        // @ts-ignore
         return NextResponse.json({ status: 'ok', rows });
     } catch (error) {
         return NextResponse.json({ error }, { status: 500 });

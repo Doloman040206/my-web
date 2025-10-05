@@ -17,10 +17,8 @@ export function PublicPizaList() {
   }, []);
 
   useEffect(() => {
-    // початковий запит
     fetchPizaList();
 
-    // підписка на storage події від інших вкладок
     function onStorage(e: StorageEvent) {
       if (e.key === 'piza-updated') {
         fetchPizaList();
@@ -43,7 +41,6 @@ export function PublicPizaList() {
     <>
       {pizaList.length > 0 ? (
         pizaList.map((item, index) => {
-          // виправлений шлях з БД (якщо є)
           const srcFromDb =
             (item as any).images && (item as any).images.length
               ? `./img/${(item as any).images}`

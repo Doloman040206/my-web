@@ -11,24 +11,20 @@ const App = () => {
 
     const links = collapse.querySelectorAll('.nav-link');
     const handler = () => {
-      // Якщо підключено jQuery + Bootstrap, викликаємо їхній метод hide()
       if ((window as any).jQuery && typeof (window as any).jQuery === 'function') {
         try {
           (window as any).jQuery(collapse).collapse('hide');
           return;
         } catch (err) {
-          // якщо щось пішло не так — падаємо до фолбеку
+          // якщо щось пішло не так
         }
       }
-      // Фолбек: просто прибираємо клас 'show'
       if (collapse.classList.contains('show')) {
         collapse.classList.remove('show');
       }
     };
 
     links.forEach(link => link.addEventListener('click', handler));
-
-    // cleanup при демонтажі
     return () => links.forEach(link => link.removeEventListener('click', handler));
   }, []);
 
@@ -146,13 +142,8 @@ const App = () => {
 
     <section id="f-img w-1000">
       <p id="choise">Наше меню</p>
-
-      {/* --- ТІЛЬКИ МЕНЮ (обгорнуте) --- */}
       <div className="menu-scope">
         <PublicPizaList />
-
-
-      {/* Weather лишається поза .menu-scope — не чіпаємо його */}
       <PublicWeatherWidget />
 	  </div>
 

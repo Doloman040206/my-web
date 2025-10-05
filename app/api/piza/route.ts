@@ -1,4 +1,3 @@
-// app/api/piza/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import pool from "@/app/libs/piza";
 
@@ -19,20 +18,12 @@ export async function POST(request: NextRequest) {
     try {
         const data = await request.json();
         const db = await pool.getConnection();
-
-        // беремо значення images з тіла (може бути data.image або data.images)
         const imagesValue = data.image ?? data.images ?? null;
-
         const query = 'INSERT INTO piza (name, ingridients, price, images) VALUES (?, ?, ?, ?)';
         const [result] = await db.execute(query, [data.name, data.ingridients, data.price, imagesValue]);
-
-        // @ts-ignore — result.insertId
         const insertId = (result as any).insertId;
-
         const querySelectCreated = 'SELECT * FROM piza WHERE id = ?';
-        // @ts-ignore
         const [createdRows] = await db.execute(querySelectCreated, [insertId]);
-
         db.release();
         // @ts-ignore
         return NextResponse.json(createdRows[0]);

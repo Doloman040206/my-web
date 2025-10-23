@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CreatePizaForm } from './components/CreatePizaForm';
 import { PizaListItem } from './components/PizaListItem';
 import { PizaObject } from './types';
+import './components/style.css';
 
 const App: React.FC = () => {
   const [pizaList, setPizaList] = useState<PizaObject[]>([]);
@@ -54,7 +55,6 @@ const App: React.FC = () => {
     try {
       await apiCreatePiza(name, ingridients, price, image);
       await fetchPizaList();
-      // мінімальна нотифікація для інших вкладок
       try { localStorage.setItem('piza-updated', String(Date.now())); } catch (e) { /* ignore */ }
     } catch {
       alert('Create failed. See console.');

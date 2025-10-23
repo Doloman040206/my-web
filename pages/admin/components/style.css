@@ -1,0 +1,261 @@
+.piza-page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 12px;
+  font-family: Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.piza-subtitle {
+  text-align: center;
+  font-size: 23px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  color: #222;
+}
+
+/* Форма */
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.form-label {
+  width: 100px;
+  margin-right: 6px;
+  font-size: 1.05rem;
+  color: #222;
+  flex: 0 0 100px;
+}
+
+.form-input {
+  font-size: 1.1rem;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.image-box {
+  font-size: 1.1rem;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+}
+
+.add-button {
+  font-size: 1.05rem;
+  padding: 10px 18px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+
+.piza-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 28px 30px;
+  background: #f6f6f6;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+.piza-left {
+  flex: 1 1 auto;
+  padding-right: 20px;
+}
+
+.piza-row {
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.piza-label {
+  width: 100px;
+  font-size: 1.05rem;
+  color: #333;
+  flex: 0 0 100px;
+}
+
+.piza-value {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #111;
+  flex: 1 1 auto;
+  word-break: break-word;
+}
+
+.piza-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+  flex: 0 0 140px;
+}
+
+.piza-btn {
+  width: 110px;
+  font-size: 1.05rem;
+  padding: 8px 14px;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.piza-btn-delete {
+  background-color: #11820b;
+}
+
+.piza-btn-edit {
+  background-color: #0839ff;
+}
+
+/* Мобільна адаптація */
+@media (max-width: 700px) {
+  .piza-page { padding: 18px 12px; }
+
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-label {
+    width: 100%;
+    flex: 0 0 auto;
+    margin-bottom: 6px;
+  }
+
+  .image-box { min-height: 48px; }
+
+  .add-button {
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px;
+  }
+
+  .piza-card {
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .piza-left { padding-right: 0; }
+
+  .piza-label {
+    width: 100%;
+    flex: 0 0 auto;
+    font-size: 1rem;
+    color: #666;
+  }
+
+  .piza-value {
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  .piza-actions {
+    flex-direction: row;
+    justify-content: stretch;
+    width: 100%;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .piza-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+  }
+}
+
+.image-box:focus, .image-box:hover { outline: 2px solid rgba(0,0,0,0.06); }
+.form-input:focus { box-shadow: 0 0 0 3px rgba(2,132,199,0.05); border-color: #bcdffb; outline: none; }
+
+
+.piza-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  font-size: 1.05rem;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 0;           
+  box-sizing: border-box;
+}
+
+.piza-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+  flex: 0 0 auto;
+}
+
+
+@media (min-width: 701px) {
+  .piza-btn {
+    width: 110px; 
+  }
+
+  .piza-actions {
+    align-items: flex-end;
+    flex: 0 0 140px; 
+  }
+}
+
+@media (max-width: 700px) {
+  .piza-actions {
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .piza-btn {
+    width: 100%;       
+    padding: 10px;
+    font-size: 1rem;
+  }
+
+  .piza-btn {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .piza-btn-delete { flex: 0 0 48%; }
+  .piza-btn-edit   { flex: 0 0 48%; }
+  
+}
+
+.piza-card {
+  box-sizing: border-box;
+  overflow: visible;
+}
+
